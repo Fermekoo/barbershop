@@ -5,7 +5,7 @@ namespace App\Providers;
 use App\Users;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-
+use Illuminate\Http\Request;
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -37,12 +37,17 @@ class AuthServiceProvider extends ServiceProvider
     //     });
     // }
 
-    public function boot(){
+    public function boot(Request $request){
+            
+
         $this->app['auth']->viaRequest('api', function ($request) {
+            
+
             if ($request->header('Authorization')) {
                 $key = explode(' ',$request->header('Authorization'));
                 $user = Users::where('api_token', $key[1])->first();
              if(!empty($user)){
+                 
                 $request->request->add(['userid' => $user->id]);
         
                 }
